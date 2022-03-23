@@ -3,12 +3,21 @@
 {% block header %}
 	<div id="topBar">
 		<div>Symfoheim</div>
-		<div>Account (Login/Register)</div>
+		<div>
+			{% if app.user %}
+				👤
+				{{ app.user.nickname }}
+				&emsp;
+				<a href="{{ path('app_logout') }}">Log out</a>
+			{% else %}
+				Login/Register
+			{% endif %}
+		</div>
 	</div>
 	<div id="pageTitle">
-		<img src="{{asset('build/images/logo_interplanetravels_70.png')}}" alt="{{ pageTitle }} illustration"/>
+		<img src="{{asset(titleImage)}}" alt="{{ pageTitle }} illustration"/>
 
-		<h1>
+		<h1 title={{ pageTitle }}>
 			{{ pageTitle }}
 		</h1>
 	</div>

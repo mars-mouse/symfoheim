@@ -17,6 +17,7 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'pageTitle' => 'Symfoheim',
+            'titleImage' => 'build/images/old-house-720.jpg',
         ]);
     }
 }
