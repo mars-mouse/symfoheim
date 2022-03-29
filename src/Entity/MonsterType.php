@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ArmourRepository;
+use App\Repository\MonsterTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ArmourRepository::class)
+ * @ORM\Entity(repositoryClass=MonsterTypeRepository::class)
  */
-class Armour
+class MonsterType
 {
     /**
      * @ORM\Id
@@ -30,15 +30,16 @@ class Armour
     private $price;
 
     /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private $bonus;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Rarity::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $rarity;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Statline::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $statline;
 
     /**
      * @ORM\ManyToMany(targetEntity=Effect::class)
@@ -79,18 +80,6 @@ class Armour
         return $this;
     }
 
-    public function getBonus(): ?int
-    {
-        return $this->bonus;
-    }
-
-    public function setBonus(int $bonus): self
-    {
-        $this->bonus = $bonus;
-
-        return $this;
-    }
-
     public function getRarity(): ?Rarity
     {
         return $this->rarity;
@@ -99,6 +88,18 @@ class Armour
     public function setRarity(?Rarity $rarity): self
     {
         $this->rarity = $rarity;
+
+        return $this;
+    }
+
+    public function getStatline(): ?Statline
+    {
+        return $this->statline;
+    }
+
+    public function setStatline(Statline $statline): self
+    {
+        $this->statline = $statline;
 
         return $this;
     }

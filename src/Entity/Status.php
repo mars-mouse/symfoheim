@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StatusRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +24,16 @@ class Status
      */
     private $name;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Effect::class)
+     */
+    private $effects;
+
+    public function __construct()
+    {
+        $this->effects = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +47,30 @@ class Status
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): self
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects[] = $effect;
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): self
+    {
+        $this->effects->removeElement($effect);
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SpellRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,28 @@ class Spell
      * @ORM\Column(type="integer", nullable=true)
      */
     private $augmentDifficulty;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=MagicSchool::class, inversedBy="spells")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $magicSchool;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Effect::class)
+     */
+    private $effects;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Effect::class)
+     */
+    private $augmentedEffects;
+
+    public function __construct()
+    {
+        $this->effects = new ArrayCollection();
+        $this->augmentedEffects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +144,66 @@ class Spell
     public function setAugmentDifficulty(?int $augmentDifficulty): self
     {
         $this->augmentDifficulty = $augmentDifficulty;
+
+        return $this;
+    }
+
+    public function getMagicSchool(): ?MagicSchool
+    {
+        return $this->magicSchool;
+    }
+
+    public function setMagicSchool(?MagicSchool $magicSchool): self
+    {
+        $this->magicSchool = $magicSchool;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): self
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects[] = $effect;
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): self
+    {
+        $this->effects->removeElement($effect);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getAugmentedEffects(): Collection
+    {
+        return $this->augmentedEffects;
+    }
+
+    public function addAugmentedEffect(Effect $augmentedEffect): self
+    {
+        if (!$this->augmentedEffects->contains($augmentedEffect)) {
+            $this->augmentedEffects[] = $augmentedEffect;
+        }
+
+        return $this;
+    }
+
+    public function removeAugmentedEffect(Effect $augmentedEffect): self
+    {
+        $this->augmentedEffects->removeElement($augmentedEffect);
 
         return $this;
     }

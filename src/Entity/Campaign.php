@@ -22,6 +22,11 @@ class Campaign
      */
     private $name;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Warband::class, inversedBy="campaign", cascade={"persist", "remove"})
+     */
+    private $warband;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class Campaign
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getWarband(): ?Warband
+    {
+        return $this->warband;
+    }
+
+    public function setWarband(?Warband $warband): self
+    {
+        $this->warband = $warband;
 
         return $this;
     }

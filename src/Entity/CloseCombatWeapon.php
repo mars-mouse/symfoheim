@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CloseCombatWeaponRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,22 @@ class CloseCombatWeapon
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $onlyShield;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Rarity::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rarity;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Effect::class)
+     */
+    private $effects;
+
+    public function __construct()
+    {
+        $this->effects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +104,42 @@ class CloseCombatWeapon
     public function setOnlyShield(bool $onlyShield): self
     {
         $this->onlyShield = $onlyShield;
+
+        return $this;
+    }
+
+    public function getRarity(): ?Rarity
+    {
+        return $this->rarity;
+    }
+
+    public function setRarity(?Rarity $rarity): self
+    {
+        $this->rarity = $rarity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): self
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects[] = $effect;
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): self
+    {
+        $this->effects->removeElement($effect);
 
         return $this;
     }

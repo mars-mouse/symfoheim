@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MonsterRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,9 +25,31 @@ class Monster
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Warband::class, inversedBy="monsters")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $price;
+    private $warband;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    private $wounds;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=MonsterType::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $monsterType;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Status::class)
+     */
+    private $status;
+
+    public function __construct()
+    {
+        $this->status = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,14 +68,62 @@ class Monster
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getWarband(): ?Warband
     {
-        return $this->price;
+        return $this->warband;
     }
 
-    public function setPrice(?int $price): self
+    public function setWarband(?Warband $warband): self
     {
-        $this->price = $price;
+        $this->warband = $warband;
+
+        return $this;
+    }
+
+    public function getWounds(): ?int
+    {
+        return $this->wounds;
+    }
+
+    public function setWounds(int $wounds): self
+    {
+        $this->wounds = $wounds;
+
+        return $this;
+    }
+
+    public function getMonsterType(): ?MonsterType
+    {
+        return $this->monsterType;
+    }
+
+    public function setMonsterType(?MonsterType $monsterType): self
+    {
+        $this->monsterType = $monsterType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Status>
+     */
+    public function getStatus(): Collection
+    {
+        return $this->status;
+    }
+
+    public function addStatus(Status $status): self
+    {
+        if (!$this->status->contains($status)) {
+            $this->status[] = $status;
+        }
+
+        return $this;
+    }
+
+    public function removeStatus(Status $status): self
+    {
+        $this->status->removeElement($status);
 
         return $this;
     }

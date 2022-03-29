@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MiscEquipmentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,22 @@ class MiscEquipment
      * @ORM\Column(type="integer", nullable=true)
      */
     private $price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Rarity::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rarity;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Effect::class)
+     */
+    private $effects;
+
+    public function __construct()
+    {
+        $this->effects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +70,42 @@ class MiscEquipment
     public function setPrice(?int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getRarity(): ?Rarity
+    {
+        return $this->rarity;
+    }
+
+    public function setRarity(?Rarity $rarity): self
+    {
+        $this->rarity = $rarity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Effect>
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): self
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects[] = $effect;
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): self
+    {
+        $this->effects->removeElement($effect);
 
         return $this;
     }
