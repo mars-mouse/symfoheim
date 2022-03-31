@@ -57,11 +57,13 @@ class Spell
 
     /**
      * @ORM\ManyToMany(targetEntity=Effect::class)
+     * @ORM\JoinTable(name="spell_effect")
      */
     private $effects;
 
     /**
      * @ORM\ManyToMany(targetEntity=Effect::class)
+     * @ORM\JoinTable(name="spell_augmented_effect")
      */
     private $augmentedEffects;
 
